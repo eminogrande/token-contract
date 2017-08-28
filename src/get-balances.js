@@ -2,6 +2,8 @@ const path = require('path');
 const csv = require('ya-csv');
 const EthereumUtils = require('ethereumjs-util');
 
+const DECIMALS = 10000000000000000;
+
 const DATA_FILEPATH = path.resolve(__dirname + '/../data.csv');
 
 function getBalances () {
@@ -9,15 +11,15 @@ function getBalances () {
     const balances = {};
 
     const reader = csv.createCsvFileReader(DATA_FILEPATH, {
-      separator: ';',
+      separator: ',',
       quote: '"',
-      escape: '"',       
+      escape: '"',
       comment: '',
     });
 
     reader.addListener('data', (data) => {
       const [ address, rawAmount ] = data;
-      const amount = parseInt(rawAmount);
+      const amount = parseInt(DECIMALS * parseFloat(rawAmount));
 
       if (!balances[address]) {
         balances[address] = 0;
